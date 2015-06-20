@@ -27,7 +27,7 @@ class World
 
     def go(r)
         if r.is_a? Enumerable
-            get_next_room(r)
+            r = get_next_room(r)
         end
 
         raise "World.go requires a Room" unless r.is_a? Room.class
@@ -38,22 +38,24 @@ class World
     end
 
     # enemerates over room history to find next room
-    def get_next_room(r)
-        i = 0
+    def get_next_room(rooms)
+        r = rooms.shift
 
         # count previous r's visited, todo fixme
         @history.reverse_each do |h|
-            if h.class != r[0]
+            if h.class != r
                 break
             end
 
-            i += 1
+            r = rooms.shift
         end
 
-        if i >= r.count
-            throw :quit # todo modify methods
+        if not r
+            throw :quit
         end
 
-        r = r[i]
+        # todo modify methods
+
+        r
     end
 end
